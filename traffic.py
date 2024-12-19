@@ -44,20 +44,19 @@ def main():
         print(f"Model saved to {filename}.")
 
 
+import os
+import cv2
+import numpy as np
+
+IMG_WIDTH = 30
+IMG_HEIGHT = 30
+NUM_CATEGORIES = 43
+
+
 def load_data(data_dir):
     """
-       Load image data from directory `data_dir`.
-
-       Assume `data_dir` has one directory named after each category, numbered
-       0 through NUM_CATEGORIES - 1. Inside each category directory will be some
-       number of image files.
-
-       Return tuple `(images, labels)`. `images` should be a list of all
-       of the images in the data directory, where each image is formatted as a
-       numpy ndarray with dimensions IMG_WIDTH x IMG_HEIGHT x 3. `labels` should
-       be a list of integer labels, representing the categories for each of the
-       corresponding `images`.
-       """
+    Load image data and labels from the dataset directory.
+    """
     images = []
     labels = []
 
@@ -65,8 +64,27 @@ def load_data(data_dir):
     for category in range(NUM_CATEGORIES):
         category_path = os.path.join(data_dir, str(category))
 
+        # Verifica se o diretório existe
+        if not os.path.isdir(category_path):
+            continue
 
+        # Carrega todas as imagens no diretório da categoria
+        for file_name in os.listdir(category_path):
+            file_path = os.path.join(category_path, file_name)
 
+            # Lê a imagem usando o OpenCV
+            img = cv2.imread(file_path)
+            if img is None:
+                continue
+
+            # Redimensiona a imagem para as dimensões desejadas
+            img = cv2.resize(img, (IMG_WIDTH, IMG_HEIGHT))
+
+            # Adiciona a imagem e o rótulo correspondente
+            images.append(img)
+            labels.append(category)
+
+    return images, labels
 
 
 def get_model():
