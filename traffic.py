@@ -87,6 +87,9 @@ def load_data(data_dir):
     return images, labels
 
 
+import tensorflow as tf
+from tensorflow.keras import layers, models
+
 def get_model():
     """
     Build and compile a CNN model for traffic sign classification.
@@ -103,6 +106,26 @@ def get_model():
 
     # Terceira camada de convolução e pooling
     model.add(layers.Conv2D(64, (3, 3), activation="relu"))
+
+    # Achata as saídas das camadas convolucionais para entrada na camada densa
+    model.add(layers.Flatten())
+
+    # Camada densa com Dropout para evitar overfitting
+    model.add(layers.Dense(128, activation="relu"))
+    model.add(layers.Dropout(0.5))
+
+    # Camada de saída com NUM_CATEGORIES unidades e ativação softmax
+    model.add(layers.Dense(NUM_CATEGORIES, activation="softmax"))
+
+    # Compila o modelo
+    model.compile(
+        optimizer="adam",
+        loss="sparse_categorical_crossentropy",
+        metrics=["accuracy"]
+    )
+
+    return model
+
 
 
 if __name__ == "__main__":
