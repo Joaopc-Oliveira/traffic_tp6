@@ -89,11 +89,20 @@ def load_data(data_dir):
 
 def get_model():
     """
-    Returns a compiled convolutional neural network model. Assume that the
-    `input_shape` of the first layer is `(IMG_WIDTH, IMG_HEIGHT, 3)`.
-    The output layer should have `NUM_CATEGORIES` units, one for each category.
+    Build and compile a CNN model for traffic sign classification.
     """
-    raise NotImplementedError
+    model = models.Sequential()
+
+    # Primeira camada de convolução e pooling
+    model.add(layers.Conv2D(32, (3, 3), activation="relu", input_shape=(IMG_WIDTH, IMG_HEIGHT, 3)))
+    model.add(layers.MaxPooling2D((2, 2)))
+
+    # Segunda camada de convolução e pooling
+    model.add(layers.Conv2D(64, (3, 3), activation="relu"))
+    model.add(layers.MaxPooling2D((2, 2)))
+
+    # Terceira camada de convolução e pooling
+    model.add(layers.Conv2D(64, (3, 3), activation="relu"))
 
 
 if __name__ == "__main__":
